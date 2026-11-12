@@ -1,0 +1,13 @@
+# Pinned chart expected: bitnami/mlflow 1.4.11
+tracking:
+  service:
+    type: ClusterIP
+artifactRoot:
+  s3://REPLACE_ARTIFACT_BUCKET/mlflow
+externalDatabase:
+  existingSecret: mlflow-postgres
+serviceAccount:
+  create: true
+  name: mlflow
+  annotations:
+    eks.amazonaws.com/role-arn: REPLACE_MLFLOW_IRSA_ROLE_ARN

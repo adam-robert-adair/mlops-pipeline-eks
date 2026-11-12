@@ -1,0 +1,24 @@
+stages:
+  fetch_data:
+    cmd: python -m src.fetch_data --output data/raw/iris.csv
+    deps:
+      - src/fetch_data.py
+    outs:
+      - data/raw/iris.csv
+
+  validate_data:
+    cmd: python -m src.data_validation --input data/raw/iris.csv --output data/processed/iris_validated.csv
+    deps:
+      - src/data_validation.py
+      - data/raw/iris.csv
+    outs:
+      - data/processed/iris_validated.csv
+
+  train:
+    cmd: python -m src.training --input data/processed/iris_validated.csv --model-output models/model.joblib
+    deps:
+      - src/training.py
+      - src/evaluation.py
+      - data/processed/iris_validated.csv
+    outs:
+      - models/model.joblib

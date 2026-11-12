@@ -1,0 +1,16 @@
+{
+  "title": "MLOps Pipeline EKS",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Prediction Request Rate",
+      "targets": [
+        {
+          "expr": "rate(model_prediction_requests_total[5m])"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "version": 1
+}

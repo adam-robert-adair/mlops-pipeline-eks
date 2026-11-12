@@ -1,0 +1,10 @@
+# Pinned chart expected: argo/argo-workflows 0.43.16
+controller:
+  serviceAccount:
+    create: true
+    name: argo-workflow
+    annotations:
+      eks.amazonaws.com/role-arn: REPLACE_ARGO_IRSA_ROLE_ARN
+server:
+  extraArgs:
+    - --auth-mode=server

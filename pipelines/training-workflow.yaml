@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: mlops-training-pipeline
+  namespace: mlops
+spec:
+  serviceAccountName: argo-workflow
+  entrypoint: train-pipeline
+  templates:
+    - name: train-pipeline
+      dag:
+        tasks:
+          - name: fetch-data
+            template: run-step
+            arguments:
+              parameters:
+                - name: command
+                  value: python -m src.fetch_data --output data/raw/iris.csv
+          - name: validate-data
+            dependencies: [fetch-data]
+            template: run-step
+            arguments:
+              parameters:
+                - name: command
+                  value: python -m src.data_validation --input data/raw/iris.csv --output data/processed/iris_validated.csv
+          - name: train
+            dependencies: [validate-data]
+            template: run-step
+            arguments:
+              parameters:
+                - name: command
+                  value: python -m src.training --input data/processed/iris_validated.csv --model-output models/model.joblib
+          - name: promotion-gate
+            dependencies: [train]
+            template: run-step
+            arguments:
+              parameters:
+                - name: command
+                  value: python -m src.promotion_gate --candidate 0.95 --production 0.94 --threshold 0.01 --data data/processed/iris_validated.csv
+    - name: run-step
+      inputs:
+        parameters:
+          - name: command
+      container:
+        image: REPLACE_ECR_PIPELINE_IMAGE
+        command: ["sh", "-c"]
+        args:
+          - "{{inputs.parameters.command}}"

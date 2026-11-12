@@ -1,0 +1,13 @@
+project:
+  name: mlops-pipeline-eks
+  dashboard_path: monitoring/evidently-report.html
+
+reference_data:
+  path: data/processed/iris_validated.csv
+
+current_data:
+  path: monitoring/current_data.csv
+
+drift:
+  threshold: 0.2
+  retrain_trigger_workflow: mlops-training-pipeline

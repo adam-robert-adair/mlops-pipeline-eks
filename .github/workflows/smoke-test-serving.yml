@@ -1,0 +1,27 @@
+name: smoke-test-serving
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Service health smoke test
+        run: |
+          uvicorn serving.app:app --host 127.0.0.1 --port 8080 &
+          PID=$!
+          sleep 5
+          curl --fail http://127.0.0.1:8080/healthz
+          kill "$PID"

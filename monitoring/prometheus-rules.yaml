@@ -1,0 +1,11 @@
+groups:
+  - name: mlops-pipeline-alerts
+    rules:
+      - alert: HighModelErrorRate
+        expr: rate(model_prediction_requests_total[5m]) > 100
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Prediction volume spike"
+          description: "Prediction request volume exceeded expected baseline."

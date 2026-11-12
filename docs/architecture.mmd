@@ -1,0 +1,13 @@
+flowchart LR
+  GH[GitHub Actions OIDC] --> TF[Terraform]
+  TF --> EKS[(EKS Cluster)]
+  TF --> S3D[(S3 Data)]
+  TF --> S3A[(S3 Artifacts)]
+  DVC[DVC Pipeline] --> S3D
+  Argo[Argo Workflows] --> Train[Train + Evaluate]
+  Train --> MLflow[MLflow Tracking + Registry]
+  MLflow --> Gate[Promotion Gate]
+  Gate --> Serve[FastAPI/KServe Serving]
+  Serve --> Prom[Prometheus]
+  Serve --> Evidently[Evidently Drift Report]
+  Evidently --> Retrain[Argo Retrain Trigger]
