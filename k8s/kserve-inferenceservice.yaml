@@ -1,0 +1,12 @@
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: iris-classifier
+  namespace: mlops
+spec:
+  predictor:
+    containers:
+      - name: predictor
+        image: REPLACE_ECR_SERVING_IMAGE
+        ports:
+          - containerPort: 8080
